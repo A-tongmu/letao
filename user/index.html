@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <title>个人中心</title>
+    <link type="image/x-icon" rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../res/mui/css/mui.min.css" />
+    <link rel="stylesheet" href="../res/fontAwesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/common.css" />
+    <link rel="stylesheet" href="../css/user.css" />
+    <link rel="stylesheet" href="../res/layer.mobile-v2.0/layer_mobile/need/layer.css">
+</head>
+
+<body>
+    <div class="cz_layout bgg">
+        <header class="cz_topBar">
+            <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
+            <span class="title">个人中心</span>
+        </header>
+        <div class="cz_container">
+            <ul class="mui-table-view mui-table-view-chevron">
+                <li class="mui-table-view-cell mui-media">
+                    <a class="mui-navigate-right" href="#account">
+                        <img class="mui-media-object mui-pull-left head-img" id="head-img" src="../images/user.jpg">
+                        <div class="mui-media-body">
+                            Hello：<span>MUI</span>
+                            <p class="mui-ellipsis">账号：<span>mui</span></p>
+                        </div>
+                    </a>
+                </li>
+            </ul>
+            <ul class="mui-table-view mui-table-view-chevron">
+                <li class="mui-table-view-cell">
+                    <a href="password.html" class="mui-navigate-right">账号与安全</a>
+                </li>
+                <li class="mui-table-view-cell">
+                    <a href="../cart.html" class="mui-navigate-right">我的购物车</a>
+                </li>
+                <li class="mui-table-view-cell">
+                    <a href="address.html" class="mui-navigate-right">收货地址管理</a>
+                </li>
+            </ul>
+            <div class="p20">
+                <a href="javascript:;" class="mui-btn btn_outLogin">退出登录</a>
+            </div>
+        </div>
+        <footer class="cz_tabs">
+            <a class="tab_home fa fa-home" href="../index.html"><span>首页</span></a>
+            <a class="tab_cate fa fa-bars" href="../cate.html"><span>分类</span></a>
+            <a class="tab_cart fa fa-shopping-cart" href="../cart.html"><span>购物车</span></a>
+            <a class="tab_user fa fa-user now" href="../user/index.html"><span>会员中心</span></a>
+        </footer>
+    </div>
+    <script src="../js/jquery-3.3.1.js"></script>
+    <script src="../res/mui/js/mui.min.js"></script>
+    <script src="../res/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+    <script>
+        // 验证登录
+        $.ajax({
+            url: '/api/user/queryUserMessage',
+            type: 'get',
+            success: function (msg) {
+                if (msg.id) {
+                    $('.mui-media-body span').text(msg.username);
+                } else {
+                    //询问框
+                    layer.open({
+                        shadeClose: false //默认：true，是否点击遮罩时关闭层
+                        , content: '您还未登录，想要立马去登录吗？'
+                        , btn: ['要', '不要']
+                        , yes: function (index) {
+                            location.href = './login.html?url=' + location.href;
+                        }
+                        , no:function(){
+                            location.href = '/letao/index.html';
+                        }
+
+                    });
+                    
+                }
+            }
+        })
+
+        // 推出登录
+        $('.btn_outLogin').on('click', function () {
+            $.ajax({
+                url: '/api/user/logout',
+                type: 'get',
+                success: function (msg) {
+                    if (msg.success) {
+                        location.href = './login.html?url=' + location.href;
+                    } else {
+                        alert(msg.message);
+                    }
+                }
+            })
+        })
+    </script>
+</body>
+
+</html>

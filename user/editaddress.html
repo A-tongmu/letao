@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <title>添加新地址</title>
+    <link type="image/x-icon" rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../res/mui/css/mui.min.css" />
+    <link rel="stylesheet" href="../res/fontAwesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/common.css" />
+    <link rel="stylesheet" href="../css/user.css" />
+    <link rel="stylesheet" href="../res/layer.mobile-v2.0/layer_mobile/need/layer.css">
+    <style>
+        .cz_layout{
+            overflow: auto;
+        }
+        .select select {
+            padding: 0px 15px;
+            line-height: 21px;
+            color: #757575;
+            border: 1px solid rgba(0,0,0,.2)!important;
+            border-radius: 3px;
+        }
+        .select option{
+            width: 100px;
+        }
+        form{
+            color: #525252;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cz_layout bgg">
+        <header class="cz_topBar">
+            <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
+            <span class="title">编辑收货地址</span>
+        </header>
+        <div class="cz_container">
+            <form action="">
+                <!-- <div class="form_box">
+                    <div class="mui-input-row">
+                        <input name="recipients" type="text" placeholder="收货人">
+                    </div>
+                    <div class="mui-input-row">
+                        <input name="postcode" type="text" placeholder="邮编">
+                    </div>
+
+                    <div class="mui-input-row select">
+                        <select name="" id="s" data-id="">
+                            <option value="">请选择省份</option>
+                        </select>
+                        <select name="" id="d" data-id="">
+                            <option value="">请选择城市</option>
+                        </select>
+                        <select name="" id="f" data-id="">
+                            <option value="">请选择区/县</option>
+                        </select>
+                    </div>
+                    <input type="hidden" name="address" class="addressHid">
+                    <div class="mui-input-row">
+                        <textarea name="addressDetail" id="textarea" rows="5" placeholder="详细地址"></textarea>
+                    </div>
+                    <button class="mui-btn mui-btn-primary btn_login">确认</button>
+                </div> -->
+            </form>
+
+        </div>
+        <footer class="cz_tabs">
+            <a class="tab_home fa fa-home" href="../index.html"><span>首页</span></a>
+            <a class="tab_cate fa fa-bars" href="../cate.html"><span>分类</span></a>
+            <a class="tab_cart fa fa-shopping-cart" href="../cart.html"><span>购物车</span></a>
+            <a class="tab_user fa fa-user" href="../user/index.html"><span>会员中心</span></a>
+        </footer>
+    </div>
+    <script src="../js/jquery-3.3.1.js"></script>
+    <script src="../res/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+    <script src="../res/mui/js/mui.min.js"></script>
+    <script src="../js/jquery.region.js"></script>
+    <script src="../js/jquery.form.min.js"></script>
+    <script src="../js/template-web.js"></script>
+    <script type="text/template" id="tpl">
+        <div class="form_box">
+            <div class="mui-input-row">
+                <input name="recipients" type="text" placeholder="收货人" value="{{recipients}}">
+            </div>
+            <div class="mui-input-row">
+                <input name="mobile" type="text" placeholder="手机号" value="{{mobile}}">
+            </div>
+            <div class="mui-input-row">
+                <input name="postcode" type="text" placeholder="邮编" value="{{postCode}}">
+            </div>
+
+            <div class="mui-input-row select">
+                <select name="" id="s" data-id="">
+                    <option value="">请选择省份</option>
+                </select>
+                <select name="" id="c" data-id="">
+                    <option value="">请选择城市</option>
+                </select>
+                <select name="" id="x" data-id="">
+                    <option value="">请选择区/县</option>
+                </select>
+            </div>
+
+            <!-- 隐藏域传id和拼接好的三级联动地址 -->
+            <input type="hidden" name="address" class="addressHid">
+            <input type="hidden" name="id"  value="{{id}}">
+
+            <div class="mui-input-row">
+                <textarea name="addressDetail" id="textarea" rows="5" placeholder="详细地址">{{addressDetail}}</textarea>
+            </div>
+            <button class="mui-btn mui-btn-primary btn_login">确认</button>
+        </div>        
+    
+    </script>
+    <script>
+       
+
+        // 验证登录
+        $.ajax({
+            url: '/api/user/queryUserMessage'
+            , type: 'get'
+            , success: function (info) {
+                if (info.error) {
+                    // 消息框插件
+                    layer.open({
+                        type: 2
+                        , content: '您还未登录，2s后跳转到登录页'
+                        , time: 2 //2秒关闭（如果不配置，默认是3秒）
+                        , shadeClose: false //默认：true，是否点击遮罩时关闭层
+                        , end: function () {
+                            location.href = '/letao/user/login.html?url=' + location.href;
+                        }
+                    });
+                }
+            }
+        })
+
+        // 将需要编辑的地址信息显示在表单中
+        var search=location.search.slice(1);
+        var arr=search.split('&');
+        var json={};
+        for(var key in arr){
+            var newArr=arr[key].split('=');
+            // console.log(newArr);
+            json[newArr[0]]=newArr[1];
+        }
+        
+        // 根据id查数据
+        var Id=json.id;
+        // console.log(Id);
+        $.ajax({
+            url:'/api/address/queryAddress'
+            ,type:'get'
+            ,success:function(info){
+                console.log(info);
+                for(var key in info){
+                    if(info[key].id==Id){
+                        var ress=info[key];
+                    }
+                }
+                
+                console.log(ress);
+                var str=template('tpl',ress);
+                $('form').html(str);
+
+                // 调用三级联动
+                $('.select').region({
+                    url: '../js/region.json'
+                })
+                var addStr=ress.address;
+               
+                console.log(addStr);
+                
+                function index(startIndex,str){
+                    for(var i=startIndex;i<str.length;i++){
+                    if(str[i]=='省'||str[i]=='市'||str[i]=='区'||str[i]=='县'){
+                            return i+1;
+                        }
+                    }
+                }
+                 // 获取省
+                var sIndex=index(0,addStr);
+                var sStr=addStr.slice(0,sIndex);
+                console.log(sStr);
+                $('#s option').text(sStr);
+                // 获取市
+                var cIndex=index(sIndex,addStr);
+                var cStr=addStr.slice(sIndex,cIndex);
+                console.log(cStr);
+                $('#c option').text(cStr);
+                //获取区县
+                var xIndex=index(cIndex,addStr);
+                var xStr=addStr.slice(cIndex);
+                console.log(xStr);
+                $('#x option').text(xStr);
+            }
+        })
+
+        // 提交表单
+        var addRess;
+        $('form').ajaxForm({
+            beforeSerialize: function () {
+                // 获取三级联动表单内容
+                addRess = '';
+                $('.select select').each(function () {
+                    addRess += $(this).find('option:selected').text();
+                });
+                console.log(addRess);
+                $('.addressHid').val(addRess);
+            }
+            , beforeSubmit: function () {
+                // 表单提交验证
+                if ($('#f').find('option:selected').text() == '请选择区/县') {
+                    layer.open({
+                        content: '您还未选择具体城市'
+                        , btn: '我知道了'
+                    });
+                    return false;
+                }
+            }
+            , url: '/api/address/updateAddress'
+            , type: 'post'
+            , success: function (info) {
+                location.href = './address.html';
+
+            }
+        })
+    </script>
+</body>
+
+</html>

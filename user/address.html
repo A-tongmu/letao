@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html>
+
+<head lang="en">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
+    <meta content="yes" name="apple-mobile-web-app-capable">
+    <meta content="black" name="apple-mobile-web-app-status-bar-style">
+    <meta content="telephone=no" name="format-detection">
+    <title>收货地址管理</title>
+    <link type="image/x-icon" rel="shortcut icon" href="../images/favicon.ico">
+    <link rel="stylesheet" href="../res/mui/css/mui.min.css" />
+    <link rel="stylesheet" href="../res/fontAwesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="../css/common.css" />
+    <link rel="stylesheet" href="../css/user.css" />
+    <link rel="stylesheet" href="../res/layer.mobile-v2.0/layer_mobile/need/layer.css">
+    <style>
+        .cz_layout{
+            overflow: auto;
+        }
+        .addNewRess{
+            padding: 0px 100px;
+            box-sizing: border-box;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="cz_layout bgg">
+        <header class="cz_topBar">
+            <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
+            <span class="title">收货地址管理</span>
+        </header>
+        <div class="cz_container">
+            <ul class="mui-table-view">
+                <!-- <li class="mui-table-view-cell">
+                        <div class="mui-slider-right mui-disabled">
+                            <a class="mui-btn mui-btn-red">删除</a>
+                        </div>
+                        <a href="addressManage.html" class="mui-navigate-right mui-slider-handle">
+                            <div class="delivery">邮编：<span>100000</span>&nbsp;收货人：<span>黄晓明</span></div>
+                            <div class="address">北京市海淀区西三旗街道经验龙办公楼传智播客教育科技有限公司</div>
+                        </a>
+                    </li> -->
+            </ul>
+            <div class="addNewRess">
+                <a href="./addressManage.html" class="mui-btn mui-btn-primary btn_login ">添加新地址</a>
+            </div>
+            
+        </div>
+        <footer class="cz_tabs">
+            <a class="tab_home fa fa-home" href="../index.html"><span>首页</span></a>
+            <a class="tab_cate fa fa-bars" href="../cate.html"><span>分类</span></a>
+            <a class="tab_cart fa fa-shopping-cart" href="../cart.html"><span>购物车</span></a>
+            <a class="tab_user fa fa-user" href="../user/index.html"><span>会员中心</span></a>
+        </footer>
+    </div>
+    <script src="../res/mui/js/mui.min.js"></script>
+    <script src="../js/jquery-3.3.1.js"></script>
+    <script src="../res/layer.mobile-v2.0/layer_mobile/layer.js"></script>
+    <script src="../js/template-web.js"></script>
+    <script type="text/template" id="tpl">
+        {{each list as value }}
+        <li class="mui-table-view-cell">
+            <div class="mui-slider-right mui-disabled">
+                <a class="mui-btn mui-btn-red">删除</a>
+            </div>
+            <a href="editaddress.html?id={{value.id}}" class="mui-navigate-right mui-slider-handle">
+                <div class="delivery">邮编：<span>{{value.postCode}}</span>&nbsp;收货人：<span>{{value.recipients}}</span>&nbsp;手机号：<span>{{value.mobile}}</span></div>
+                <div class="address">{{value.address}} {{value.addressDetail}}</div>
+            </a>
+        </li>
+        {{/each}}
+    </script>
+    <script>
+        $.ajax({
+            url: '/api/address/queryAddress'
+            , type: 'get'
+            , success: function (info) {
+                if (info.error) {
+                    // 消息框插件
+                    layer.open({
+                        type: 2
+                        , content: '您还未登录，2s后跳转到登录页'
+                        , time: 2 //2秒关闭（如果不配置，默认是3秒）
+                        , shadeClose: false //默认：true，是否点击遮罩时关闭层
+                        , end: function () {
+                            location.href = '/letao/user/login.html?url=' + location.href;
+                        }
+                    });
+                } else {
+                    console.log(info);
+                    var json = { 'list': info };
+                    var str = template('tpl', json);
+                    $('.mui-table-view').html(str);
+                }
+            }
+        })
+
+
+
+    </script>
+</body>
+
+</html>
