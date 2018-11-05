@@ -1,123 +1,249 @@
 <!DOCTYPE html>
 <html>
+
 <head lang="en">
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0"/>
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0" />
     <meta content="yes" name="apple-mobile-web-app-capable">
     <meta content="black" name="apple-mobile-web-app-status-bar-style">
     <meta content="telephone=no" name="format-detection">
     <title>传智云购-搜索中心</title>
     <link type="image/x-icon" rel="shortcut icon" href="images/favicon.ico">
-    <link rel="stylesheet" href="res/mui/css/mui.min.css"/>
-    <link rel="stylesheet" href="res/fontAwesome/css/font-awesome.min.css"/>
-    <link rel="stylesheet" href="css/common.css"/>
-    <link rel="stylesheet" href="css/product.css"/>
+    <link rel="stylesheet" href="res/mui/css/mui.min.css" />
+    <link rel="stylesheet" href="res/fontAwesome/css/font-awesome.min.css" />
+    <link rel="stylesheet" href="css/common.css" />
+    <link rel="stylesheet" href="css/product.css" />
+    <style>
+        .active{
+            border: 1px solid purple!important;
+        }
+        #des{
+            position: relative;
+            /* z-index: 999; */
+        }
+        .p_number input {
+            text-align: center;
+        }
+        .tips {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            color: rgb(139, 139, 139);
+
+        }
+        .tips:after{
+            content: attr(data-num);
+            color: red;
+            position: absolute;
+            left: 7px;
+            top: 6px;
+            font-size: 5px;
+        }
+    </style>
 </head>
+
 <body>
-<div class="cz_layout">
-    <header class="cz_topBar">
-        <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
-        <span class="title">商品详情</span>
-        <a href="index.html" class="icon_home fa fa-home"></a>
-    </header>
-    <div class="cz_container ">
-        <div class="mui-scroll-wrapper">
-            <div class="mui-scroll">
-                <div class="cz_banner mui-slider">
-                    <div class="mui-slider-group mui-slider-loop">
-                        <div class="mui-slider-item mui-slider-item-duplicate">
-                            <a href="#"><img src="images/product.jpg"></a>
+    <div class="cz_layout">
+        <header class="cz_topBar">
+            <a href="javascript:history.back();" class="icon_back fa fa-arrow-left"></a>
+            <span class="title">商品详情</span>
+            <a href="index.html" class="icon_home fa fa-home"></a>
+        </header>
+        <div class="cz_container ">
+            <div class="mui-scroll-wrapper">
+                <div class="mui-scroll">
+                    <div class="cz_banner mui-slider">
+                        <div class="mui-slider-group mui-slider-loop">
+                            <div class="mui-slider-item mui-slider-item-duplicate">
+                                <a href="#"><img src=""></a>
+                            </div>
+                            <div class="mui-slider-item mui-active">
+                                <a href="#"><img src=""></a>
+                            </div>
+                            <div class="mui-slider-item mui-active">
+                                <a href="#"><img src=""></a>
+                            </div>
+                            <div class="mui-slider-item mui-slider-item-duplicate">
+                                <a href="#"><img src=""></a>
+                            </div>
                         </div>
-                        <div class="mui-slider-item mui-active">
-                            <a href="#"><img src="images/product.jpg"></a>
-                        </div>
-                        <div class="mui-slider-item mui-active">
-                            <a href="#"><img src="images/product.jpg"></a>
-                        </div>
-                        <div class="mui-slider-item mui-slider-item-duplicate">
-                            <a href="#"><img src="images/product.jpg"></a>
+                        <div class="mui-slider-indicator">
+                            <div class="mui-indicator mui-active"></div>
+                            <div class="mui-indicator"></div>
                         </div>
                     </div>
-                    <div class="mui-slider-indicator">
-                        <div class="mui-indicator mui-active"></div>
-                        <div class="mui-indicator"></div>
+
+                    <!-- 商品描述 -->
+                    <div id="des">
+
                     </div>
-                </div>
-                <div class="p_title">
-                    Nike耐克 男式 NIKE AIR MAX 1 PND QS复刻休闲鞋
-                </div>
-                <div class="p_price">
-                    <span class="fold"><span>5.9</span>折</span>
-                    价格：<strong class="present">¥
-                    712.00</strong>
-                    <del class="original">¥1199.0</del>
-                </div>
-                <div class="p_size">
-                    尺码：
-                    <span class="btn_size">38</span>
-                    <span class="btn_size">39</span>
-                    <span class="btn_size">40</span>
-                    <span class="btn_size">41</span>
-                    <span class="btn_size">43</span>
-                    <span class="btn_size">44</span>
-                    <span class="btn_size">45</span>
-                </div>
-                <div class="p_number">
-                    数量：
-                    <span class="jian">-</span><input type="tel"/><span class="jia">+</span>
-                    剩余：0 件
-                </div>
-                <div class="p_detail">
-                    <img data-lazyload="images/detail.jpg"  alt=""/>
-                    <img data-lazyload="images/detail.jpg"  alt=""/>
-                    <img data-lazyload="images/detail.jpg"  alt=""/>
-                    <img data-lazyload="images/detail.jpg"  alt=""/>
-                    <img data-lazyload="images/detail.jpg"  alt=""/>
-                    <img data-lazyload="images/detail.jpg"  alt=""/>
+
                 </div>
             </div>
         </div>
     </div>
-</div>
-<div class="p_option">
-    <a href="#" class="btn_cart fa fa-shopping-cart"></a>
-    <a href="#" class="btn_addCart">加入购物车</a>
-    <a href="#" class="btn_pay">立即购买</a>
-</div>
-<script src="res/mui/js/mui.min.js"></script>
-<script src="res/mui/js/mui.lazyload.js"></script>
-<script src="res/mui/js/mui.lazyload.img.js"></script>
-<script>
-    mui(function(){
-        mui('.mui-slider').slider({
-            interval:3000 //自动轮播周期，若为0则不自动播放，默认为0；
+    <div class="p_option">
+        <a href="./cart.html" class="btn_cart fa fa-shopping-cart"></a>
+        <a href="javascript:;" class="btn_addCart">加入购物车</a>
+        <a href="#" class="btn_pay">立即购买</a>
+        <!-- 购物车数量 -->
+        <a href="javascript:;" class="tips  mui-icon mui-icon-chatbubble" data-num="0"></a>
+    </div>
+    <script src="./js/jquery-3.3.1.js"></script>
+    <script src="res/mui/js/mui.min.js"></script>
+    <script src="./js/template-web.js"></script>
+    <script type="text/template" id="tpl">
+    <div class="p_title">
+        {{proName}}
+    </div>
+    <div class="p_price">
+        <span class="fold"><span>{{discount}}</span>折</span>
+        价格：<strong class="present">¥
+        {{price}}</strong>
+        <del class="original">¥{{oldPrice}}</del>
+    </div>
+    <div class="p_size">
+        尺码：
+        {{each size as value}}
+        <span class="btn_size">{{value}}</span>
+        {{/each}}
+    </div>
+    <div class="p_number">
+        数量：
+        <span class="jian">-</span><input readonly type="tel" value="1" /><span class="jia" data-total={{num}}>+</span>
+        剩余：{{num}} 件
+    </div>
+</script>
+    <script>
+        // 获取商品详情
+
+        // 获取地址栏id
+        var search = location.search.slice(1);
+        var arr = search.split('&');
+        var json = {};
+        for (key in arr) {
+            var newArr = arr[key].split('=');
+            json[newArr[0]] = newArr[1];
+        }
+
+        if (json.id == undefined) json.id = 1;
+        var Id = json.id;
+        $.ajax({
+            url: '/api/product/queryProductDetail'
+            , type: 'get'
+            , data: { id: Id }
+            , success: function (info) {
+                // 尺码
+                info.size = info.size.split('-');
+                // 折扣
+                info.discount = ((info.price / info.oldPrice) * 10).toFixed(1);
+
+                console.log(info);
+                // 显示轮播图片
+                $('.mui-slider-item img').attr('src', '/api' + info.pic[0].picAddr);
+
+                // 模板引擎调用
+                var htmlStr = template('tpl', info);
+                $('#des').html(htmlStr);
+            }
+        })
+
+        mui(function () {
+            mui('.mui-slider').slider({
+                interval: 3000 //自动轮播周期，若为0则不自动播放，默认为0；
+            });
+            mui('.mui-scroll-wrapper').scroll({
+                scrollY: true, //是否竖向滚动
+                scrollX: false, //是否横向滚动
+                startX: 0, //初始化时滚动至x
+                startY: 0, //初始化时滚动至y
+                indicators: false, //是否显示滚动条
+                deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
+                bounce: true, //是否启用回弹
+            });
+            // mui.init({
+            //     pullRefresh: {
+            //         container: '.mui-scroll-wrapper',
+            //         down: {
+            //             callback: function(){
+            //                 setTimeout(function(){
+            //                     mui('.mui-scroll-wrapper').pullRefresh().endPulldownToRefresh(); //refresh completed
+            //                 },1000);
+            //             }
+            //         }
+            //     }
+            // });
         });
-        mui('.mui-scroll-wrapper').scroll({
-            scrollY: true, //是否竖向滚动
-            scrollX: false, //是否横向滚动
-            startX: 0, //初始化时滚动至x
-            startY: 0, //初始化时滚动至y
-            indicators: false, //是否显示滚动条
-            deceleration:0.0006, //阻尼系数,系数越小滑动越灵敏
-            bounce: true, //是否启用回弹
-        });
-        mui.init({
-            pullRefresh: {
-                container: '.mui-scroll-wrapper',
-                down: {
-                    callback: function(){
-                        setTimeout(function(){
-                            mui('.mui-scroll-wrapper').pullRefresh().endPulldownToRefresh(); //refresh completed
-                        },1000);
+
+        // 尺码点击选择
+        $('#des').on('click', 'span.btn_size', function () {
+            $(this).addClass('active').siblings().removeClass('active');
+        })
+
+        // 数量选择
+        $('#des').on('click', '.p_number span', function () {
+            var num = $(this).siblings('input').val();
+
+            if ($(this).hasClass('jia')) {
+                // 字符串比较大小会依靠Unicode编码比较，一方需要转为number类型
+                var totals = Number($(this).attr('data-total'));
+                // console.log(totals);
+                // console.log(num);
+                if (num >= totals) return mui.toast('库存不足~~', { duration: 1000 });
+                $(this).siblings('input').val(++num);
+
+            }
+
+            if ($(this).hasClass('jian')) {
+                if (num <= 1) return mui.toast('不能再减了哦~~', { duration: 1000 });
+                $(this).siblings('input').val(--num);
+            }
+        })
+
+        // 加入购物车
+        $('.btn_addCart').click(function () {
+            var productId = Id;
+            var productNum = $('.p_number input').val();
+            var productSize = $('.btn_size.active').text();
+            if (productSize == '') return mui.toast('请选择尺码', { duration: 1000 });
+            $.ajax({
+                url: '/api/cart/addCart'
+                , type: 'post'
+                , data: { productId: productId, num: productNum, size: productSize }
+                , success: function (info) {
+                    console.log(info);
+                    if (info.success) {
+                        mui.toast('添加成功', { duration: 1000 });
+                        getNum();
+                    } else {
+                        mui.confirm('马上去登录？', '您还未登录', ['不要', '要'], function (a) {
+                            if (a.index) {
+                                location.href = "/letao/user/login.html?ulr=" + location.href;
+                            }
+                        });
                     }
                 }
-            }
-        });
-        mui('.p_detail').imageLazyload({
-            placeholder: '../images/user.jpg'
-        });
-    });
-</script>
+            })
+        })
+
+        // 获取购物车数量
+        function getNum() {
+            $.ajax({
+                url: '/api/cart/queryCart'
+                , type: 'get'
+                , success: function (info) {
+                    // console.log(info);
+                    if (info) {
+                        var num = info.length;
+                        console.log(num);
+                        $('.tips').attr('data-num', num);
+                    }
+                }
+            })
+        }
+        getNum();
+    </script>
 
 </body>
+
 </html>

@@ -166,6 +166,8 @@
                 }
                 
                 console.log(ress);
+                if(!ress) return location.href = './address.html';
+
                 var str=template('tpl',ress);
                 $('form').html(str);
 

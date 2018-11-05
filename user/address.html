@@ -63,7 +63,7 @@
         {{each list as value }}
         <li class="mui-table-view-cell">
             <div class="mui-slider-right mui-disabled">
-                <a class="mui-btn mui-btn-red">删除</a>
+                <a class="mui-btn mui-btn-red" data-id="{{value.id}}">删除</a>
             </div>
             <a href="editaddress.html?id={{value.id}}" class="mui-navigate-right mui-slider-handle">
                 <div class="delivery">邮编：<span>{{value.postCode}}</span>&nbsp;收货人：<span>{{value.recipients}}</span>&nbsp;手机号：<span>{{value.mobile}}</span></div>
@@ -96,6 +96,35 @@
                 }
             }
         })
+
+
+        // 删除地址
+        mui(function () {
+            mui.init();
+            mui('.mui-table-view').on('tap', '.mui-btn-red', function () {
+                var btnArray = ['是', '否'];
+                var _this=$(this);
+                mui.confirm('你要删除这条地址信息吗？', '温馨提示', btnArray, function (e) {
+                    console.log(e);
+                    //是
+                    if (e.index == 0) {
+                        var Id=_this.attr('data-id');
+                        $.ajax({
+                            url:'/api/address/deleteAddress'
+                            ,data:{id:Id}
+                            ,type:'post'
+                            ,success:function(info){
+                                if(info.success){
+                                    _this.parents('.mui-table-view-cell').fadeOut('normal',function () {$(this).remove()});
+                                }
+                            }
+                        })
+                    } else {
+                        _this.parent().next().css('transform','translate(0px, 0px)');
+                    }
+                })
+            });
+        });
 
 
 
