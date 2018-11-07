@@ -30,7 +30,7 @@
                     </a>
                 </li>
                 <li>
-                    <a href="./user_list.html">
+                    <a href="./user_list.html" class="active">
                         <i class="fa fa-group"></i>
                         用户管理
                     </a>
@@ -41,9 +41,9 @@
                         分类管理
                         <i class="arrow fa fa-angle-right"></i>
                     </a>
-                    <ul class="list-unstyled show">
+                    <ul class="list-unstyled">
                         <li>
-                            <a href="./category.html" class="active">
+                            <a href="./category.html">
                                  一级分类
                             </a>
                         </li>
@@ -95,40 +95,38 @@
                     </ul>
                 </nav>          
             </div>
-            <div class="body category">
+            <div class="body user">
                 <!-- 面包屑 -->
                 <ol class="breadcrumb">
                     <li><a href="javascript:;">分类管理</a></li>
-                    <li class="active">商品分类</li>
+                    <li class="active">一级分类</li>
                 </ol>
-                <div class="page-title">
-                    <a href="javascript:;" class="btn btn-success btn-sm pull-right">添加分类</a>
-                </div>
-                <div class="panel panel-default">
-                    <table class="table table-bordered table-striped">
-                        <thead>
-                            <tr>
-                                <th width="10%">序号</th>
-                                <th>分类名称</th>
-                                <th>是否显示</th>
-                                <td>品牌数量</td>
-                                <th>操作</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <!-- <tr>
-                                <td>1</td>
-                                <td>前端开发</td>
-                                <td>是</td>
-                                <td>8</td>
-                                <td>
-                                    <a href="javascript:;" class="btn btn-info btn-xs">编 辑</a>
-                                    <a href="javascript:;" class="btn btn-warning btn-xs">注 销</a>
-                                </td>
-                            </tr> -->
-                            
-                        </tbody>
-                    </table>
+                <div class="user-add">
+                    <form action="" class="form-horizontal col-xs-offset-2">
+                        <div class="form-group">
+                            <label for="" class="col-xs-3 control-label">分类名称</label>
+                            <div class="col-xs-4">
+                                <input name="categoryName" type="text" class="form-control input-sm">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-xs-3 control-label">是否显示</label>
+                            <div class="col-xs-4">
+                                <label class="radio-inline">
+                                    <input type="radio" name="isDelete" value="0" checked> 是
+                                </label>
+                                <label class="radio-inline">
+                                    <input name="isDelete" value="1" type="radio"> 否
+                                </label>
+                            </div>
+                        </div>
+                        <input type="hidden" name="id">
+                        <div class="form-group">
+                            <div class="col-xs-7">
+                                <button class="btn btn-success btn-sm pull-right"> 提 交 </button>
+                            </div>                          
+                        </div>
+                    </form>
                 </div>
             </div>
         </div>
@@ -138,41 +136,45 @@
     <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="./assets/nprogress/nprogress.js"></script>
     <script src="./js/common.js"></script>
-    <script src="./assets/art-template/template-web.js"></script>
-    <script type="text/template" id="tpl">
-        {{each rows as value key}}
-        <tr>
-            <td>{{key+1}}</td>
-            <td>{{value.categoryName}}</td>
-            {{if (value.isDelete==1)}}
-            <td>否</td>
-            {{else}}
-            <td>是</td>
-            {{/if}}
-            <td>8</td>
-            <td>
-                <a href="./editCategory.html?id={{value.id}}" class="btn btn-info btn-xs">编 辑</a>
-                {{if (value.isDelete==1)}}
-                <a href="javascript:;" class="btn btn-primary btn-xs">显 示</a>
-                {{else}}
-                <a href="javascript:;" class="btn btn-warning btn-xs">注 销</a>
-                {{/if}}
-            </td>
-        </tr>
-        {{/each}}
-    </script>
+    <script src="./assets/jquery.form.min.js"></script>
+
     <script>
+        // 显示原来的信息
+        var id=location.search.slice(4);
+        $('input[type="hidden"]').val(id);
         $.ajax({
             url:'/api/category/queryTopCategoryPaging'
             ,type:'get'
             ,data:{page:1,pageSize:100}
             ,success:function(info){
                 console.log(info);
-                var strHtml=template('tpl',info);
-                $('table tbody').html(strHtml);
+                var arr=info.rows;
+                for (key in arr ){
+                    if(arr[key].id==id){
+                        $('input[name="categoryName"]').val(arr[key].categoryName);
+                        if(arr[key].isDelete==1){
+                            $('input[type="radio"]').eq(1).prop('checked',true);
+                        } else {
+                            $('input[type="radio"]').eq(2).prop('checked',true);
+                        }
+                        
+                    }
+                }
             }
         })
 
+        // 修改
+        $('form').ajaxForm({
+            url:'/api/category/updateTopCategory'
+            ,type:'post'
+            ,success:function(info){
+                console.log(info);
+                if(info.success){
+                    location.href='/letao/admin/category.html'
+
+                }
+            }
+        })
     </script>
 </body>
 </html>

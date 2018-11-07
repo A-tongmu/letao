@@ -1,5 +1,13 @@
 <!DOCTYPE html>
 <html>
+<style>
+    div.cz_container {
+            position: absolute;
+            top: 45px;
+            bottom: 80px;
+            padding: 0;
+        }
+</style>
 
 <head lang="en">
     <meta charset="UTF-8">
@@ -22,9 +30,12 @@
             <span class="title">购物车</span>
             <a href="javascript:;" class="icon_refresh fa fa-refresh"></a>
         </header>
-        <div class="cz_container mui-scroll-wrapper">
-            <ul class="mui-table-view mui-scroll">
-                <!-- <li data-product="" class="mui-table-view-cell">
+
+
+        <div class="cz_container mui-scroll-wrapper mui-content">
+            <div class="mui-scroll">
+                <ul class="mui-table-view mui-table-view-chevron">
+                    <!-- <li data-product="" class="mui-table-view-cell">
                 <div class="mui-slider-right mui-disabled">
                     <a class="mui-btn mui-btn-blue">编辑</a>
                     <a class="mui-btn mui-btn-red">删除</a>
@@ -43,7 +54,8 @@
                     <input type="checkbox"/>
                 </a>
             </li> -->
-            </ul>
+                </ul>
+            </div>
             <div class="cart_order">订单总额：&yen;<span>0</span> <a href="#">生成订单</a></div>
         </div>
         <footer class="cz_tabs">
@@ -110,44 +122,103 @@
                 var btnArray = ['确定', '取消'];
                 var template = '<input type="number" placeholder="选择数量"/><br>' +
                     '<input type="text" placeholder="选择尺码" />';
-                mui.confirm(template, '编辑商品', btnArray, function (e) {
-                    if (e.index == 0) {
-
-                    } else {
-
-                    }
-                })
             });
             // mui('.mui-scroll-wrapper').scroll({
-            //     scrollY: true, //是否竖向滚动
-            //     scrollX: false, //是否横向滚动
-            //     startX: 0, //初始化时滚动至x
-            //     startY: 0, //初始化时滚动至y
-            //     indicators: false, //是否显示滚动条
-            //     deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
-            //     bounce: true, //是否启用回弹
-            // });
+            //         scrollY: true, //是否竖向滚动
+            //         scrollX: false, //是否横向滚动
+            //         startX: 0, //初始化时滚动至x
+            //         startY: 0, //初始化时滚动至y
+            //         indicators: false, //是否显示滚动条
+            //         deceleration: 0.0006, //阻尼系数,系数越小滑动越灵敏
+            //         bounce: true, //是否启用回弹
+            //     });
         });
 
-        $.ajax({
-            url: '/api/cart/queryCartPaging'
-            , type: 'get'
-            , data: { page: 1, pageSize: 50 }
-            , success: function (info) {
-                console.log(info)
-                if (info.error) {
-                    mui.alert('请登录后访问！', '您还未登录', '确定', function () {
-                        location.href = "/letao/user/login.html?ulr=" + location.href;
-                    });
-                    return;
-                }
-                var htmlStr = template('tpl', info);
-                $('.mui-table-view').html(htmlStr);
+        // 下拉刷新
+        var page = 1;
+        var pageSize = 5;
+        mui.init({
+            pullRefresh: {
+                container: ".cz_container",//下拉刷新容器标识，querySelector能定位的css选择器均可，比如：id、.class等
+                down: {
+                    height: 50,//可选,默认50.触发下拉刷新拖动距离,
+                    auto: true,//可选,默认false.首次加载自动下拉刷新一次
+                    contentdown: "下拉可以刷新",//可选，在下拉可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentover: "释放立即刷新",//可选，在释放可刷新状态时，下拉刷新控件上显示的标题内容
+                    contentrefresh: "正在刷新...",//可选，正在刷新状态时，下拉刷新控件上显示的标题内容
+                    callback: function () { //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
 
-                // 订单总额
-                totalP();
+                        page = 1;
+                        $.ajax({
+                            url: '/api/cart/queryCartPaging'
+                            , type: 'get'
+                            , data: { page: page, pageSize: pageSize }
+                            , success: function (info) {
+                                console.log(info)
+                                if (info.error) {
+                                    mui.alert('请登录后访问！', '您还未登录', '确定', function () {
+                                        location.href = "/letao/user/login.html?ulr=" + location.href;
+                                    });
+                                    return;
+                                }
+                                var htmlStr = template('tpl', info);
+                                $('.mui-table-view').html(htmlStr);
+
+                                // 订单总额
+                                totalP();
+
+                                // 结束下拉刷新
+                                mui('.cz_container').pullRefresh().endPulldownToRefresh();
+
+                                // 启用上拉加载
+                                mui('.cz_container').pullRefresh().enablePullupToRefresh();
+
+                            }
+                        })
+                    }
+                },
+                // 上拉加载
+                up: {
+                    height: 50,//可选.默认50.触发上拉加载拖动距离
+                    auto: true,//可选,默认false.自动上拉加载一次
+                    contentrefresh: "正在加载...",//可选，正在加载状态时，上拉加载控件上显示的标题内容
+                    contentnomore: '没有更多数据了',//可选，请求完毕若没有更多数据时显示的提醒内容；
+                    callback: function(){  //必选，刷新函数，根据具体业务来编写，比如通过ajax从服务器获取新数据；
+                        page++;
+                        $.ajax({
+                            url: '/api/cart/queryCartPaging'
+                            , type: 'get'
+                            , data: { page: page, pageSize: pageSize }
+                            , success: function (info) {
+                                console.log(info)
+                                if (info.error) {
+                                    mui.alert('请登录后访问！', '您还未登录', '确定', function () {
+                                        location.href = "/letao/user/login.html?ulr=" + location.href;
+                                    });
+                                    return;
+                                }
+                                var htmlStr = template('tpl', info);
+                                $('.mui-table-view').append(htmlStr);
+
+                                // 订单总额
+                                totalP();
+
+                                // 结束上拉加载
+                                if(info){
+                                    mui('.cz_container').pullRefresh().endPullupToRefresh(true);
+                                } else {
+                                    mui('.cz_container').pullRefresh().endPullupToRefresh(false);
+                                }
+                                
+
+                            }
+                        })
+                    } 
+                }
             }
-        })
+        });
+
+
 
         // 生成订单总额
         $('.mui-table-view').on('click', 'input[type="checkbox"]', totalP)
@@ -164,11 +235,6 @@
             $('.cart_order span').text(sum.toFixed(2));
         }
 
-        // // 后退按钮点击事件
-        // $('.icon_back').click(function () {
-        //     location.href = location.search.slice(5);
-        // })
-
         // 实现点击后退刷新
         $(document).ready(function (e) {
             var counter = 0; if (window.history && window.history.pushState) {
@@ -176,7 +242,7 @@
                     window.history.pushState('forward', null, '#'); window.history.forward(1); //alert("不可回退");  
                     location.replace(document.referrer);//刷新 
                 });
-            } 
+            }
             window.history.pushState('forward', null, '#'); //在IE中必须得有这两行  
             window.history.forward(1);
         }); 

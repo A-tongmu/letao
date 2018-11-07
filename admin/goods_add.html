@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>乐淘 - 后台管理</title>
@@ -8,8 +9,9 @@
     <link rel="stylesheet" href="./assets/nprogress/nprogress.css">
     <link rel="stylesheet" href="./css/index.css">
 </head>
+
 <body>
-    
+
     <!-- 侧边栏 -->
     <div class="aside">
         <!-- 个人资料 -->
@@ -44,7 +46,7 @@
                     <ul class="list-unstyled">
                         <li>
                             <a href="./category.html">
-                                 一级分类
+                                一级分类
                             </a>
                         </li>
                         <li>
@@ -93,7 +95,7 @@
                             </a>
                         </li>
                     </ul>
-                </nav>          
+                </nav>
             </div>
             <!-- 讲师资料 -->
             <div class="body">
@@ -102,56 +104,71 @@
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">商品封面</label>
                             <div class="col-xs-2 preview">
-                                <img src="./images/default.png">
+                                <img class="img" src="./images/default.png">
                                 <input type="file" id="upfile">
                                 <div class="cover">
-                                    <i class="fa fa-upload"></i>                  
+                                    <i class="fa fa-upload"></i>
                                 </div>
                             </div>
                         </div>
+
+                        <input type="hidden" name="pic">
+
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">商品名称</label>
                             <div class="col-xs-5">
-                                <input type="text" class="form-control input-sm">
+                                <input name="proName" type="text" class="form-control input-sm">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">所属品牌</label>
                             <div class="col-xs-5">
-                                <select name="" class="form-control input-sm">
-                                    <option value="">河北省</option>
-                                    <option value="">山东省</option>
-                                    <option value="">北京市</option>
+
+                                <select id="pinpai" name="brandId" class="form-control input-sm">
+
                                 </select>
+
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">商品价格</label>
                             <div class="col-xs-5">
-                                <input type="text" class="form-control input-sm">
+                                <input name="oldPrice" type="text" class="form-control input-sm">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">优惠价格</label>
                             <div class="col-xs-5">
-                                <input type="text" class="form-control input-sm">
+                                <input name="price" type="text" class="form-control input-sm">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-xs-3 control-label">产品尺寸</label>
+                            <div class="col-xs-5">
+                                <input name="size" type="text" class="form-control input-sm">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">库存量</label>
                             <div class="col-xs-5">
-                                <input type="text" class="form-control input-sm">
+                                <input name="num" type="text" class="form-control input-sm">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="" class="col-xs-3 control-label">是否下架</label>
+                            <div class="col-xs-5">
+                                <input name="statu" type="text" class="form-control input-sm">
                             </div>
                         </div>
                         <div class="form-group">
                             <label for="" class="col-xs-3 control-label">商品描述</label>
                             <div class="col-xs-5 ckeditor">
-                                <textarea name="" rows="5" class="form-control input-sm"></textarea>
+                                <textarea name="proDesc" rows="5" class="form-control input-sm"></textarea>
                             </div>
                         </div>
                         <div class="form-group">
                             <div class="col-xs-8">
-                                <a href="javascript:;" class="btn btn-success btn-sm pull-right">保 存</a>
+                                <button class="btn btn-success btn-sm pull-right">保 存</button>
                             </div>
                         </div>
                     </form>
@@ -164,5 +181,104 @@
     <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="./assets/nprogress/nprogress.js"></script>
     <script src="./js/common.js"></script>
+    <script src="./assets/jquery.form.min.js"></script>
+    <script src="./assets/art-template/template-web.js"></script>
+    <script type="text/template" id="tpl">
+        {{each rows as value}}
+        <option value="{{value.id}}">{{value.categoryName}}</option>
+        {{/each}}
+    </script>
+
+    <script>
+        $.ajax({
+            url: '/api/category/queryTopCategoryPaging'
+            , type: 'get'
+            , data: { page: 1, pageSize: 100 }
+            , success: function (info) {
+                console.log(info);
+                var strHtml = template('tpl', info);
+                $('#pinpai').html(strHtml);
+            }
+        })
+
+        // 文件上传
+        var file;
+        $('#upfile').on('change', function () {
+            var _this = $(this);
+            file = this.files[0];
+            console.log(file);
+
+            // 上传图片
+            var ft = new FormData();
+            ft.append('pic1', file);
+            $.ajax({
+                url: '/api/product/addProductPic'
+                , type: 'post'
+                , data: ft
+                , contentType: false
+                , processData: false
+                , success: function (info) {
+                    console.log(info);
+                    
+                    // 本地预览
+                    var reader=new FileReader();
+                    reader.readAsDataURL(file);
+                    reader.onload=function(){
+                        $('.img').attr('src',reader.result);
+                    }
+
+                    $('input[type="hidden"]').val(JSON.stringify([info]));
+
+                    // 为了避免jquery.form.js根据
+                    // input type=file 来修改 Content-Type
+                    // 可以在上传并实现预览完成后，将 input
+                    // 删除
+                    _this.remove();
+                }
+            })
+
+
+
+        })
+
+        //  提交表单 (原生方法数据提交不过去)
+        // document.querySelector('.pull-right').onclick=function(e){
+        //     if(!file){
+        //         alert('请上传文件');
+        //         return;
+        //     }
+        //     var fm=document.querySelector('.form-horizontal');
+        //     var fd=new FormData(fm);
+        //     var xhr=new XMLHttpRequest();
+        //     xhr.onreadystatechange=function(){
+        //         if(xhr.readyState==4){
+        //             var res=JSON.parse(xhr.responseText);
+        //             if(res.success){
+        //                 location.href="./goods_list.html";
+        //             } else {
+        //                 alert('添加失败！');
+        //             }
+        //         }
+        //     }
+
+        //     xhr.open('post','/api/product/addProduct');
+        //     xhr.send(fd)
+
+        //     e.preventDefault();
+        // }
+
+        $('form').ajaxForm({
+            url: '/api/product/addProduct',
+            type: 'post',
+            success: function (info) {
+                console.log(info);
+                if (info.success) {
+                    location.href = './goods_list.html';
+                }
+            }
+        });
+
+    </script>
 </body>
+
 </html>

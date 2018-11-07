@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>乐淘 - 后台管理</title>
@@ -8,8 +9,9 @@
     <link rel="stylesheet" href="./assets/nprogress/nprogress.css">
     <link rel="stylesheet" href="./css/index.css">
 </head>
+
 <body>
-    
+
     <!-- 侧边栏 -->
     <div class="aside">
         <!-- 个人资料 -->
@@ -44,7 +46,7 @@
                     <ul class="list-unstyled">
                         <li>
                             <a href="./category.html">
-                                 一级分类
+                                一级分类
                             </a>
                         </li>
                         <li>
@@ -93,7 +95,7 @@
                             </a>
                         </li>
                     </ul>
-                </nav>          
+                </nav>
             </div>
             <!-- 讲师列表 -->
             <div class="body user-list">
@@ -127,15 +129,15 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <!-- <tr>
                                 <td>1</td>
                                 <td>某某某</td>
-                                <td>否</td>
                                 <td>15901256171</td>
+                                <td>否</td>
                                 <td>
                                     <a href="javascript:;" class="btn btn-warning btn-xs">禁 用</a>
                                 </td>
-                            </tr>
+                            </tr> -->
                         </tbody>
                     </table>
                 </div>
@@ -147,5 +149,65 @@
     <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="./assets/nprogress/nprogress.js"></script>
     <script src="./js/common.js"></script>
+    <script src="./assets/art-template/template-web.js"></script>
+    <script type="text/template" id="tpl">
+        {{each rows as value key}}
+        <tr>
+            <td>{{key+1}}</td>
+            <td>{{value.username}}</td>
+            <td>{{value.mobile}}</td>
+            {{if(value.isDelete==1)}}
+            <td>是</td>
+            {{else}}
+            <td>否</td>
+            {{/if}}
+            <td>
+                {{if(value.isDelete==1)}}
+                <a data-id="{{value.id}}" data-status="{{value.isDelete}}" href="javascript:;" class="btn btn-primary btn-xs">启 用</a>
+                {{else}}
+                <a data-id="{{value.id}}" data-status="{{value.isDelete}}" href="javascript:;" class="btn btn-warning btn-xs">禁 用</a>
+                {{/if}}
+            </td>
+        </tr>
+        {{/each}}
+    </script>
+    <script>
+        $.ajax({
+            url: '/api/user/queryUser',
+            type: 'get',
+            data: { page: 1, pageSize: 100 },
+            success: function (info) {
+                console.log(info);
+                var strHtml = template('tpl', info);
+                $('tbody').html(strHtml);
+            }
+        })
+
+        // 操作启用/禁用
+        $('table tbody').on('click', '.btn-xs', function () {
+            var Id = $(this).attr('data-id');
+            var status = $(this).attr('data-status');
+            var _this = $(this);
+            status = Math.abs(status - 1);
+
+            $.ajax({
+                url: '/api/user/updateUser',
+                type: 'post',
+                data: { id: Id, isDelete: status },
+                success: function (info) {
+                    console.log(info);
+                    $(_this).toggleClass('btn-primary btn-warning');
+                    if ($(_this).hasClass('btn-primary')) {
+                        $(_this).text('启 用').parent().prev().text('是');
+                        isDelete = 1;
+                    } else {
+                        $(_this).text('禁 用').parent().prev().text('否');
+                        isDelete = 0;
+                    }
+                }
+            })
+        })
+    </script>
 </body>
+
 </html>

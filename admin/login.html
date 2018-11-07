@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <title>乐淘 - 后台管理</title>
@@ -7,7 +8,18 @@
     <link rel="stylesheet" href="./assets/font-awesome/css/font-awesome.css">
     <link rel="stylesheet" href="./assets/nprogress/nprogress.css">
     <link rel="stylesheet" href="./css/index.css">
+    <style>
+        .modal-backdrop {
+            height: 0!important;
+        }
+        .modal-dialog {
+            margin: 10px auto!important;
+            width: 400px!important;
+            z-index: 9999999!important;
+        }
+    </style>
 </head>
+
 <body>
     <!-- 登录 -->
     <div class="login">
@@ -20,20 +32,55 @@
                     <span class="input-group-addon">
                         <i class="fa fa-user"></i>
                     </span>
-                    <input type="text" class="form-control" placeholder="用户名">
+                    <input name="username" type="text" class="form-control" placeholder="用户名">
                 </div>
                 <div class="input-group input-group-lg">
                     <span class="input-group-addon">
                         <i class="fa fa-key"></i>
                     </span>
-                    <input type="password" class="form-control" placeholder="密码">
+                    <input name="password" type="password" class="form-control" placeholder="密码">
                 </div>
-                <button type="submit" class="btn btn-lg btn-primary btn-block">登 录</button>
+                <button type="submit" class="btn btn-lg btn-primary btn-block" data-toggle="modal" data-target="#myModal">登
+                    录</button>
+
+                <!-- 提示框 -->
+                <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h4 class="modal-title" id="myModalLabel">提示</h4>
+                            </div>
+                            <div class="modal-body">
+                                ...
+                            </div>
+                            <div class="modal-footer">
+                                <button type="button" class="btn btn-primary" data-dismiss="modal">关闭</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
-    
+
     <script src="./assets/jquery/jquery.min.js"></script>
-    <script src="./assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="./js/bootstrap.js"></script>
+
+    <script src="../js/jquery.form.min.js"></script>
+    <script>
+        $('form').ajaxForm({
+            url: '/api/employee/employeeLogin',
+            type: 'post',
+            success: function (info) {
+                if (info.success) {
+                    var url = location.search && location.search.substr(5);
+                    location.href = url || './index.html';
+                } else {
+                    $('.modal-body').text(info.message);
+                }
+            }
+        })
+    </script>
 </body>
+
 </html>
